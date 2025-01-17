@@ -16,3 +16,17 @@ jobs:
 
     - name: Run hello-world.sh script
       run: ./hello-world.sh
+
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository content
+      uses: actions/checkout@v2
+
+    - name: Set up permission for shell scripts
+      run: chmod +x hello-world.sh test.sh
+
+    - name: Run hello-world.sh script
+      run: ./test.sh
