@@ -1,24 +1,27 @@
-name: Hello World Workflow V2
+name: Hello world build
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  print-hello-world:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout repository content
       uses: actions/checkout@v2
 
-    - name: Print "hello world" to a text file
-      run: echo "hello world" > hello.txt
+    - name: Set up permission for hello-world.sh script
+      run: chmod +x hello-world.sh
 
-    - name: Commit and push changes
-      env:
-        GITHUB_TOKEN: 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
+    - name: Run hello-world.sh script
+      run: ./hello-world.sh
+
+    - name: Verify hello2.txt content
       run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add hello.txt
-        git commit -m 'Add hello.txt with "hello world"'
-        git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git HEAD:main
+        content=$(cat hello2.txt)
+        if [ "$content" = "Hello, world!" ]; then
+          echo "Test passed"
+        else
+          echo "Test failed"
+          exit 1
+        fi
