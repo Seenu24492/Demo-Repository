@@ -16,6 +16,14 @@ jobs:
 
     - name: Run hello-world.sh script
       run: ./hello-world.sh
+      
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add hello.txt
+        git commit -m 'Add hello.txt with "hello world"'
+        git push
 
   test:
 
