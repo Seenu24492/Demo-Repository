@@ -38,4 +38,4 @@ jobs:
           -H "Content-Type: application/json" \
           -u $SNOW_USERNAME:$SNOW_PASSWORD \
           --data "$incident_data" \
-          https://regionsdev.service-now.com/api/sn_dpr_content/get_github_data
+          https://regionsdev.service-now.com/api/rfr/get_github_data
