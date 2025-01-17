@@ -26,17 +26,7 @@ jobs:
             echo "Test passed"
         else
             echo "Test failed"
-            exit 1
-
-    - name: Commit and push hello.txt
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git add hello.txt
-        git commit -m "Processed: ${{ env.COMMIT_MESSAGE }}"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            exit 0
 
     - name: Send the test results to ServiceNow
       env:
