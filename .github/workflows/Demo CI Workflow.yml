@@ -3,9 +3,7 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  
   test:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -15,5 +13,13 @@ jobs:
     - name: Set up permission for shell scripts
       run: chmod +x test.sh
 
-    - name: Run test.sh script
-      run: ./test.sh
+    - name: Run test.sh script and capture output
+      id: run_test_script
+      run: |
+        output=$(./test.sh)
+        echo "$output"
+        echo "::set-output name=test_output::$output"
+
+    - name: Use the output from test.sh in another step
+      run: |
+        echo "The output of test.sh is: ${{ steps.run_test_script.outputs.test_output }}"
