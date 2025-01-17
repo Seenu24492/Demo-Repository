@@ -35,7 +35,7 @@ jobs:
         COMMIT_MESSAGE: ${{ env.COMMIT_MESSAGE }}
       run: |
         incident_data=$(jq -n \
-          --arg testKey ${{ steps.run_test_script.outputs.test_output }} \
+          --arg testKey "${{ steps.run_test_script.outputs.test_output }}" \
           --arg commit_message "$COMMIT_MESSAGE" \
           '{testKey: $testKey, commit_msg: $commit_message}')
  
