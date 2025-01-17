@@ -27,7 +27,7 @@ jobs:
       env:
         SNOW_INSTANCE: https://regionsdev.service-now.com
         SNOW_USERNAME: demo.user
-        SNOW_PASSWORD: ${{ secrets.SNOW_PASSWORD }}
+        SNOW_PASSWORD: Pass1234
         COMMIT_MESSAGE: ${{ env.COMMIT_MESSAGE }}
       run: |
         incident_data=$(jq -n \
