@@ -1,0 +1,24 @@
+name: Hello World Workflow V2
+
+on: [push]
+
+jobs:
+  print-hello-world:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Print "hello world" to a text file
+      run: echo "hello world" > hello.txt
+
+    - name: Commit and push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add hello.txt
+        git commit -m 'Add hello.txt with "hello world"'
+        git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }}.git HEAD:main
