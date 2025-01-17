@@ -28,5 +28,5 @@ jobs:
     - name: Set up permission for shell scripts
       run: chmod +x hello-world.sh test.sh
 
-    - name: Run hello-world.sh script
+    - name: Run test.sh script
       run: ./test.sh
