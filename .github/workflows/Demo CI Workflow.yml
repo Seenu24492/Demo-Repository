@@ -23,3 +23,19 @@ jobs:
     - name: Use the output from test.sh in another step
       run: |
         echo "The output of test.sh is: ${{ steps.run_test_script.outputs.test_output }}"
+        
+    - name: Send the test results to ServiceNow
+      env:
+        SNOW_INSTANCE: https://regionsdev.service-now.com
+        SNOW_USERNAME: demo.user
+        SNOW_PASSWORD: Pass1234
+      run: |
+        incident_data=$(jq -n \
+          --arg testKey "Hello from GitHub" \
+          '{testKey: $testKey}')
+ 
+        curl -X POST \
+          -H "Content-Type: application/json" \
+          -u $SNOW_USERNAME:$SNOW_PASSWORD \
+          --data "$incident_data" \
+https://regionsdev.service-now.com/api/sn_dpr_content/get_github_data
