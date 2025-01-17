@@ -16,9 +16,10 @@ jobs:
     - name: Run test.sh script and capture output
       id: run_test_script
       run: |
-        output=$(./test.sh 2>&1)
+        output=$(./test.sh)
         echo "$output"
-        echo "::set-output name=test_result::$(echo "$output" | tail -1)"
+        echo "::set-output name=test_output::$output"
 
-    - name: Display the result of the script
-      run: echo "The result of test.sh is: ${{ steps.run_test_script.outputs.test_result }}"
+    - name: Use the output from test.sh in another step
+      run: |
+        echo "The output of test.sh is: ${{ steps.run_test_script.outputs.test_output }}"
