@@ -38,7 +38,7 @@ jobs:
       run: |
         incident_data=$(jq -n \
           --arg testKey "Hello from GitHub" \
-          --arg commit_message ${{ env.COMMIT_MESSAGE } \
+          --arg commit_message ${{ env.COMMIT_MESSAGE }} \
           '{testKey: $testKey, commit_msg: $commit_message}')
  
         curl -X POST \
