@@ -10,39 +10,53 @@ jobs:
     - name: Checkout repository content
       uses: actions/checkout@v2
 
-    - name: Set up permission for shell scripts
-      run: chmod +x test.sh
-
-    - name: Run test.sh script and capture output
-      id: run_test_script
-      run: |
-        output=$(./test.sh)
-        echo "$output"
-        echo "::set-output name=test_output::$output"
-
-    - name: Use the output from test.sh in another step
-      run: |
-        echo "The output of test.sh is: ${{ steps.run_test_script.outputs.test_output }}"
-
     - name: Extract commit message
       id: extract_message
       run: |
         COMMIT_MESSAGE=$(git log -1 --pretty=%B)
         echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
-        
+
+    - name: Create hello.txt file
+      run: echo "Hello, world!" > hello.txt
+
+    - name: Verify hello.txt content
+      run: |
+        content=$(cat hello.txt)
+        if [ "$content" = "Hello, world!" ]; then
+            echo "Test passed"
+        else
+            echo "Test failed"
+            exit 1
+
+    - name: Commit and push hello.txt
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add hello.txt
+        git commit -m "Processed: ${{ env.COMMIT_MESSAGE }}"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Send the test results to ServiceNow
       env:
         SNOW_INSTANCE: https://regionsdev.service-now.com
         SNOW_USERNAME: demo.user
-        SNOW_PASSWORD: Pass1234
+        SNOW_PASSWORD: ${{ secrets.SNOW_PASSWORD }}
+        COMMIT_MESSAGE: ${{ env.COMMIT_MESSAGE }}
       run: |
         incident_data=$(jq -n \
           --arg testKey "Hello from GitHub" \
-          --arg commit_message ${{ env.COMMIT_MESSAGE }} \
+          --arg commit_message "$COMMIT_MESSAGE" \
           '{testKey: $testKey, commit_msg: $commit_message}')
  
+        echo "Generated incident data: $incident_data"
+        
         curl -X POST \
           -H "Content-Type: application/json" \
           -u $SNOW_USERNAME:$SNOW_PASSWORD \
           --data "$incident_data" \
-          https://regionsdev.service-now.com/api/rfr/get_github_data
+          $SNOW_INSTANCE/api/rfr/get_github_data
+
+    - name: Display hello.txt content (for debugging)
+      run: cat hello.txt
