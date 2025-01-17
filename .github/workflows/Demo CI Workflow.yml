@@ -19,8 +19,8 @@ jobs:
     - name: Set up permission for shell scripts
       run: chmod +x test.sh
 
-    - name: Run hello-world.sh script
-      run: ./hello-world.sh
+    - name: Run test.sh script
+      run: ./test.sh
 
 
     - name: Send the test results to ServiceNow
