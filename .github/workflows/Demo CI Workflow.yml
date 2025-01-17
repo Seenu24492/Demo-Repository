@@ -16,17 +16,12 @@ jobs:
         COMMIT_MESSAGE=$(git log -1 --pretty=%B)
         echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
 
-    - name: Create hello.txt file
-      run: echo "Hello, world!" > hello.txt
+    - name: Set up permission for shell scripts
+      run: chmod +x test.sh
 
-    - name: Verify hello.txt content
-      run: |
-        content=$(cat hello.txt)
-        if [ "$content" = "Hello, world!" ]; then
-            echo "Test passed"
-        else
-            echo "Test failed"
-            exit 0
+    - name: Run hello-world.sh script
+      run: ./hello-world.sh
+
 
     - name: Send the test results to ServiceNow
       env:
