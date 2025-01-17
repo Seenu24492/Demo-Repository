@@ -23,6 +23,12 @@ jobs:
     - name: Use the output from test.sh in another step
       run: |
         echo "The output of test.sh is: ${{ steps.run_test_script.outputs.test_output }}"
+
+    - name: Extract commit message
+      id: extract_message
+      run: |
+        COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+        echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
         
     - name: Send the test results to ServiceNow
       env:
@@ -32,7 +38,8 @@ jobs:
       run: |
         incident_data=$(jq -n \
           --arg testKey "Hello from GitHub" \
-          '{testKey: $testKey}')
+          --arg commit_message ${{ env.COMMIT_MESSAGE } \
+          '{testKey: $testKey, commit_msg: $commit_message}')
  
         curl -X POST \
           -H "Content-Type: application/json" \
