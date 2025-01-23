@@ -1,3 +1,3 @@
- #!/bin/sh devolopment completed
+ #!/bin/sh dev complete
 
 echo "Hello, world!" > hello2.txt
